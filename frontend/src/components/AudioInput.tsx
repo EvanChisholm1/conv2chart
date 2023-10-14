@@ -1,6 +1,10 @@
 import { FC, useState, useRef, useEffect } from "react";
 
-const AudioRecorder: FC = () => {
+interface Props {
+    onRecordingFinish?: (blob: Blob) => void;
+}
+
+const AudioRecorder: FC<Props> = ({ onRecordingFinish }) => {
     const [isRecording, setRecording] = useState(false);
     const recorder = useRef<null | MediaRecorder>(null);
     const chunks = useRef<Blob[]>([]);
@@ -22,9 +26,12 @@ const AudioRecorder: FC = () => {
             });
 
             recorder.current.addEventListener("stop", () => {
+                setRecording(false);
                 const blob = new Blob(chunks.current, {
                     type: "audio/ogg; codecs=opus",
                 });
+
+                onRecordingFinish && onRecordingFinish(blob);
 
                 const audioURL = URL.createObjectURL(blob);
                 setUrl(audioURL);
@@ -32,7 +39,7 @@ const AudioRecorder: FC = () => {
         };
 
         setRecorder();
-    }, []);
+    }, [onRecordingFinish]);
 
     useEffect(() => {
         if (!recorder.current) return;
@@ -45,15 +52,20 @@ const AudioRecorder: FC = () => {
             if (recorder.current.state === "paused") recorder.current.resume();
         } else {
             if (recorder.current.state === "recording") {
-                recorder.current.pause();
+                recorder.current.stop();
             }
         }
     }, [isRecording]);
 
-    const finish = () => {
-        if (!recorder.current) return;
+    // const finish = () => {
+    //     if (!recorder.current) return;
 
-        recorder.current.stop();
+    //     recorder.current.stop();
+    // };
+
+    const reset = () => {
+        setUrl("");
+        chunks.current = [];
     };
 
     return (
@@ -61,10 +73,12 @@ const AudioRecorder: FC = () => {
             {!isRecording ? (
                 <button onClick={() => setRecording(true)}>Start</button>
             ) : (
-                <button onClick={() => setRecording(false)}>Pause</button>
+                <button onClick={() => setRecording(false)}>Stop</button>
             )}
 
-            <button onClick={finish}>finish</button>
+            {!isRecording && <button onClick={reset}>reset</button>}
+
+            {/* <button onClick={finish}>finish</button> */}
             {url && <audio controls={true} src={url}></audio>}
         </div>
     );
