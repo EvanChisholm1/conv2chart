@@ -1,5 +1,4 @@
 import AudioRecorder from "./components/AudioInput";
-import "./App.css";
 import { useState } from "react";
 
 interface ChartItem {
@@ -9,7 +8,7 @@ interface ChartItem {
 
 function App() {
     const [blob, setBlob] = useState<null | Blob>(null);
-    const [transcript, setTranscript] = useState("");
+    const [transcript, setTranscript] = useState("A");
     const [chartItems, setChartItems] = useState<null | ChartItem[]>(null);
 
     const transcribe = async () => {
@@ -44,27 +43,60 @@ function App() {
 
     return (
         <>
-            <h1>Conv2Chart</h1>
-            <AudioRecorder onRecordingFinish={(b) => setBlob(b)} />
-            <button onClick={transcribe}>transcribe</button>
-            {transcript && (
-                <>
-                    <textarea
-                        onChange={(e) => setTranscript(e.target.value)}
-                        value={transcript}
-                    ></textarea>
-                    <button onClick={generateChart}>Generate Chart</button>
-                </>
-            )}
-
-            {chartItems
-                ? chartItems.map((item) => (
-                      <div key={item.name}>
-                          <h2>{item.name}</h2>
-                          <p>{item.content}</p>
-                      </div>
-                  ))
-                : ""}
+            <h1 className="text-center text-5xl font-semibold m-10">
+                Conv2Chart
+            </h1>
+            <div className="flex flex-col gap-2 place-items-center">
+                <div className="flex flex-col gap-2 w-96">
+                    <AudioRecorder onRecordingFinish={(b) => setBlob(b)} />
+                    <button
+                        className="bg-blue-500 text-white rounded-md p-2 px-5 font-semibold hover:bg-blue-600"
+                        onClick={transcribe}
+                    >
+                        Transcribe
+                    </button>
+                    {transcript && (
+                        <>
+                            <textarea
+                                className="outline-none border-none ring-2 ring-gray-300 rounded focus:ring-blue-500 h-[500px] p-3"
+                                onChange={(e) => setTranscript(e.target.value)}
+                                value={transcript}
+                            ></textarea>
+                            <button
+                                className="bg-green-600 text-white rounded-md p-2 px-5 font-semibold hover:bg-green-700"
+                                onClick={generateChart}
+                            >
+                                Generate Chart
+                            </button>
+                        </>
+                    )}
+                    {chartItems ? (
+                        <>
+                            <h2 className="font-semibold text-3xl">Chart:</h2>
+                            <ul className="flex flex-col gap-2">
+                                {chartItems.map((item) => (
+                                    <li
+                                        className="flex flex-col gap-2"
+                                        key={item.name}
+                                    >
+                                        <hr />
+                                        <h3 className="font-medium text-lg">
+                                            {item.name}:
+                                        </h3>
+                                        {item.content
+                                            .split("\n")
+                                            .map((c, i) => (
+                                                <p key={i}>{c}</p>
+                                            ))}
+                                    </li>
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        ""
+                    )}
+                </div>
+            </div>
         </>
     );
 }

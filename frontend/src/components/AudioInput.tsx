@@ -63,20 +63,42 @@ const AudioRecorder: FC<Props> = ({ onRecordingFinish }) => {
     //     recorder.current.stop();
     // };
 
-    const reset = () => {
-        setUrl("");
-        chunks.current = [];
-    };
+    // const reset = () => {
+    //     setUrl("");
+    //     chunks.current = [];
+    // };
 
     return (
-        <div>
+        <div className="flex flex-col w-96 gap-2">
             {!isRecording ? (
-                <button onClick={() => setRecording(true)}>Start</button>
+                <>
+                    <button
+                        className="bg-blue-500 text-white rounded-md p-2 px-5 font-semibold hover:bg-blue-600"
+                        onClick={() => setRecording(true)}
+                    >
+                        Start Recording
+                    </button>
+                </>
             ) : (
-                <button onClick={() => setRecording(false)}>Stop</button>
+                <>
+                    <p>Recording...</p>
+                    <button
+                        className="bg-red-500 text-white rounded-md p-2 font-semibold hover:bg-red-600"
+                        onClick={() => setRecording(false)}
+                    >
+                        Stop Recording
+                    </button>
+                </>
             )}
-
-            {!isRecording && <button onClick={reset}>reset</button>}
+            {/* 
+            {!isRecording && (
+                <button
+                    className="bg-red-500 text-white rounded-md p-2 font-semibold"
+                    onClick={reset}
+                >
+                    Reset
+                </button>
+            )} */}
 
             {/* <button onClick={finish}>finish</button> */}
             {url && <audio controls={true} src={url}></audio>}
