@@ -38,7 +38,14 @@ def fill_chart():
 
     chart_items.append({'name': "Cheif Complaint", "content": completion['choices'][0]['message']['content']})
 
-    print(completion)
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
+        {"role": "system", "content": "act as an expert emergency room doctor"},
+        {"role": "user", "content": f"based on the following conversation transcript generate a bullet point of the patients history with thier issue: {completion['choices'][0]['message']['content']}: {transcript}"}
+    ])
+
+    chart_items.append({'name': "History With Issue", "content": completion['choices'][0]['message']['content']})
+
+    # print(completion)
 
     return { 'chart_items': chart_items }
 
