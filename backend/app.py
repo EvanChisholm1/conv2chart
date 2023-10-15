@@ -24,6 +24,26 @@ def main():
 
     return '{"message": "Hello world"}'
 
+@app.post("/fill-chart")
+@cross_origin()
+def fill_chart():
+    chart_items = []
+
+    transcript = request.json['transcript']
+
+    completion = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[
+        {"role": "system", "content": "act as an expert emergency room doctor"},
+        {"role": "user", "content": f"based on the following conversation transcript find the patients chief complaint, just output the main complaint and nothing more: {transcript}"}
+    ])
+
+    chart_items.append({'name': "Cheif Complaint", "content": completion['choices'][0]['message']['content']})
+
+    print(completion)
+
+    return { 'chart_items': chart_items }
+
+    # return "hello world"
+
 @app.post("/transcribe")
 @cross_origin()
 def transcribe():
@@ -35,7 +55,3 @@ def transcribe():
         
         print(transcript)
         return transcript
-
-
-    return 'hello there'
-
