@@ -54,6 +54,11 @@ def fill_chart():
 @app.post("/transcribe")
 @cross_origin()
 def transcribe():
+    if not os.path.exists('./audiofiles'):
+        # If not, create the directory
+        os.makedirs('./audiofiles')
+        print(f"Directory ./audiofiles created successfully.")
+
     print(request.files['audio'])
     audio_id = v4()
     request.files['audio'].save(f'./audiofiles/{audio_id}.mp3')
