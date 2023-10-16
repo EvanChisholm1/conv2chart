@@ -37,7 +37,7 @@ function App() {
                 </p>
             </header>
             <div className="flex flex-col gap-2 place-items-center">
-                <div className="flex flex-col gap-2 w-96">
+                <div className="flex flex-col gap-2 md:w-[600px] mx-3 mb-3">
                     <AudioRecorder onRecordingFinish={(b) => setBlob(b)} />
 
                     {blob ? (

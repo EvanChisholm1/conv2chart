@@ -69,7 +69,7 @@ const AudioRecorder: FC<Props> = ({ onRecordingFinish }) => {
     // };
 
     return (
-        <div className="flex flex-col w-96 gap-2">
+        <div className="flex flex-col gap-2">
             {!isRecording ? (
                 <>
                     <button
