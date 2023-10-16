@@ -11,7 +11,12 @@ function App() {
     const [transcript, setTranscript] = useState("A");
     const [chartItems, setChartItems] = useState<null | ChartItem[]>(null);
 
+    const [isGenerating, setIsGenerating] = useState(false);
+    const [isTranscribing, setIsTranscribing] = useState(false);
+
     const transcribe = async () => {
+        setTranscript("");
+        setIsTranscribing(true);
         if (!blob) return;
 
         const formData = new FormData();
@@ -24,9 +29,12 @@ function App() {
 
         const text = (await response.json()).text;
         setTranscript(text);
+        setIsTranscribing(false);
     };
 
     const generateChart = async () => {
+        setChartItems(null);
+        setIsGenerating(true);
         const response = await fetch("http://localhost:8080/fill-chart", {
             method: "POST",
             headers: {
@@ -39,6 +47,7 @@ function App() {
         console.log(json);
 
         setChartItems(json["chart_items"]);
+        setIsGenerating(false);
     };
 
     return (
@@ -55,6 +64,9 @@ function App() {
                     >
                         Transcribe
                     </button>
+
+                    {isTranscribing ? <p>Transcribing...</p> : ""}
+
                     {transcript && (
                         <>
                             <textarea
@@ -70,6 +82,9 @@ function App() {
                             </button>
                         </>
                     )}
+
+                    {isGenerating ? <p>Generating Chart...</p> : ""}
+
                     {chartItems ? (
                         <>
                             <h2 className="font-semibold text-3xl">Chart:</h2>
