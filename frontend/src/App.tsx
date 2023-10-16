@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ChartGenerator } from "./components/ChartGenerator";
 
 function App() {
+    console.log(import.meta.env.VITE_API_URL);
     const [blob, setBlob] = useState<null | Blob>(null);
     const [transcript, setTranscript] = useState("");
 
@@ -16,10 +17,13 @@ function App() {
         const formData = new FormData();
         formData.append("audio", blob);
 
-        const response = await fetch("http://localhost:8080/transcribe", {
-            method: "POST",
-            body: formData,
-        });
+        const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/transcribe`,
+            {
+                method: "POST",
+                body: formData,
+            }
+        );
 
         const text = (await response.json()).text;
         setTranscript(text);
@@ -37,7 +41,7 @@ function App() {
                 </p>
             </header>
             <div className="flex flex-col gap-2 place-items-center">
-                <div className="flex flex-col gap-2 md:w-[600px] mx-3 mb-3">
+                <div className="flex flex-col gap-2 md:w-[600px] mx-3 mb-3 w-80">
                     <AudioRecorder onRecordingFinish={(b) => setBlob(b)} />
 
                     {blob ? (

@@ -13,13 +13,16 @@ export const ChartGenerator: FC<Props> = ({ transcript }) => {
     const generateChart = async () => {
         setChartItems(null);
         setIsGenerating(true);
-        const response = await fetch("http://localhost:8080/fill-chart", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ transcript: transcript }),
-        });
+        const response = await fetch(
+            `${import.meta.env.VITE_API_URL}/fill-chart`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ transcript: transcript }),
+            }
+        );
 
         const json = await response.json();
         console.log(json);
