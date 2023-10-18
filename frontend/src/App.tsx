@@ -1,9 +1,17 @@
 import AudioRecorder from "./components/AudioInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChartGenerator } from "./components/ChartGenerator";
 
 function App() {
-    console.log(import.meta.env.VITE_API_URL);
+    useEffect(() => {
+        // server is hosted on render, this wakes it up as soon as the user opens the website
+        fetch(`${import.meta.env.VITE_API_URL}`);
+
+        setInterval(() => {
+            fetch(`${import.meta.env.VITE_API_URL}`);
+        }, 300000);
+    }, []);
+
     const [blob, setBlob] = useState<null | Blob>(null);
     const [transcript, setTranscript] = useState("");
 
