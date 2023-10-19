@@ -1,9 +1,9 @@
 import AudioRecorder from "./components/AudioInput";
+import API_URL from "./ApiUrl";
 import { useState } from "react";
 import { ChartGenerator } from "./components/ChartGenerator";
 
 function App() {
-    console.log(import.meta.env.VITE_API_URL);
     const [blob, setBlob] = useState<null | Blob>(null);
     const [transcript, setTranscript] = useState("");
 
@@ -17,13 +17,10 @@ function App() {
         const formData = new FormData();
         formData.append("audio", blob);
 
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/transcribe`,
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
+        const response = await fetch(`${API_URL}/transcribe`, {
+            method: "POST",
+            body: formData,
+        });
 
         const text = (await response.json()).text;
         setTranscript(text);
@@ -74,8 +71,6 @@ function App() {
                     )}
                 </div>
             </div>
-
-            <footer></footer>
         </>
     );
 }

@@ -1,3 +1,4 @@
+import API_URL from "../ApiUrl";
 import { FC, useState } from "react";
 import { ChartItem } from "../types/ChartItem";
 import { Chart } from "./Chart";
@@ -13,16 +14,13 @@ export const ChartGenerator: FC<Props> = ({ transcript }) => {
     const generateChart = async () => {
         setChartItems(null);
         setIsGenerating(true);
-        const response = await fetch(
-            `${import.meta.env.VITE_API_URL}/fill-chart`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ transcript: transcript }),
-            }
-        );
+        const response = await fetch(`${API_URL}/fill-chart`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ transcript: transcript }),
+        });
 
         const json = await response.json();
         console.log(json);
